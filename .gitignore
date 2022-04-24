@@ -17,7 +17,6 @@ gradle-app.setting
 jebml/src
 *.iml
 
-**/resources/natives
 udpqueue-natives/dist
 
 *.log
