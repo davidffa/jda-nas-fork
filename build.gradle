@@ -21,30 +21,33 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 def getBuildParameters(base, bits) {
   def bitSuffix = (bits == 32) ? 'x86' : 'x86-64'
+  def arch = System.getProperty("os.arch")
+
+  if (arch == 'aarch64') bitSuffix = arch
 
   if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     return [
         'identifier': "win-${bitSuffix}",
         'library': "${base}.dll",
-        'setupArguments': ["-DBITZ:STRING=${bits}", '-A', (bits == 64 ? 'x64' : 'Win32')],
+        'setupArguments': ['-DCMAKE_BUILD_TYPE=Release', '-A', (bits == 64 ? 'x64' : 'Win32')],
         'buildArguments': ['--config', 'Release'],
         'env': [:]
     ]
   } else if (Os.isFamily(Os.FAMILY_MAC)) {
     return [
-        'identifier': 'darwin',
+        'identifier': "darwin-${bitSuffix}",
         'library': "lib${base}.dylib",
-        'setupArguments': ["-DBITZ:STRING=${bits}"],
+        'setupArguments': ['-DCMAKE_BUILD_TYPE=Release'],
         'buildArguments': [],
-        'env': ['CXXFLAGS': "-m${bits}", 'CFLAGS': "-m${bits}", 'LDFLAGS': "-m${bits}"]
+        'env': [:]
     ]
   } else {
     return [
         'identifier': "linux-${bitSuffix}",
         'library': "lib${base}.so",
-        'setupArguments': ["-DBITZ:STRING=${bits}"],
+        'setupArguments': ['-DCMAKE_BUILD_TYPE=Release'],
         'buildArguments': [],
-        'env': ['CXXFLAGS': "-m${bits}", 'CFLAGS': "-m${bits}", 'LDFLAGS': "-m${bits}"]
+        'env': [:]
     ]
   }
 }
