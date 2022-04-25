@@ -13,7 +13,7 @@ allprojects {
   targetCompatibility = 1.8
 }
 
-ext.slf4jVersion = '1.7.25'
+ext.slf4jVersion = '1.7.36'
 
 group = 'com.sedmelluq'
 
