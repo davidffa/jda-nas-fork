@@ -74,6 +74,22 @@ public class UdpQueueManager extends NativeResourceHolder {
     }
   }
 
+  public boolean queuePacketWithSocket(long key, ByteBuffer packet, InetSocketAddress address, long explicitSocket) {
+    synchronized (library) {
+      if (released) {
+        return false;
+      }
+
+      int length = packet.remaining();
+      packetBuffer.clear();
+      packetBuffer.put(packet);
+
+      int port = address.getPort();
+      String hostAddress = address.getAddress().getHostAddress();
+      return library.queuePacketWithSocket(instance, key, hostAddress, port, packetBuffer, length, explicitSocket);
+    }
+  }
+
   /**
    * This is the method that should be called to start processing the queues. It will use the current thread and return
    * only when close() method is called on the queue manager.
